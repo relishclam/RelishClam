@@ -1,49 +1,58 @@
 import React from 'react';
-import { Menu, Shell, Package, FileText, Settings, Scale, ArrowLeft } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Shell } from 'lucide-react';
 
 interface NavigationProps {
-  activeView: string;
-  onNavigate: (view: string) => void;
+  onNavigate: (path: string) => void;
 }
 
-export default function Navigation({ activeView, onNavigate }: NavigationProps) {
+function Navigation({ onNavigate }: NavigationProps) {
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <nav className="bg-indigo-600 text-white">
-      <div className="max-w-7xl mx-auto px-4">
+    <nav className="bg-blue-800 text-white shadow-lg">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => onNavigate('home')}
-              className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-indigo-100 hover:bg-indigo-500"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back to Menu</span>
-            </button>
-            <div className="flex items-center space-x-2">
-              <Shell className="w-8 h-8" />
-              <span className="text-xl font-bold">ClamFlow™</span>
-            </div>
-          </div>
+          <Link to="/" className="flex items-center space-x-2">
+            <Shell className="h-8 w-8" />
+            <span className="font-bold text-xl">ClamFlow</span>
+          </Link>
           
-          <div className="hidden md:flex space-x-8">
-            <NavLink
-              icon={<Package />}
-              text="Production"
-              isActive={activeView === 'production'}
-              onClick={() => onNavigate('production')}
-            />
-            <NavLink
-              icon={<FileText />}
-              text="Quality Control"
-              isActive={activeView === 'quality'}
-              onClick={() => onNavigate('quality')}
-            />
-            <NavLink
-              icon={<Settings />}
-              text="Admin"
-              isActive={activeView === 'admin'}
-              onClick={() => onNavigate('admin')}
-            />
+          <div className="flex space-x-4">
+            <Link
+              to="/production"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/production')
+                  ? 'bg-blue-900 text-white'
+                  : 'text-blue-100 hover:bg-blue-700'
+              }`}
+              onClick={() => onNavigate('/production')}
+            >
+              Production
+            </Link>
+            <Link
+              to="/quality"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/quality')
+                  ? 'bg-blue-900 text-white'
+                  : 'text-blue-100 hover:bg-blue-700'
+              }`}
+              onClick={() => onNavigate('/quality')}
+            >
+              Quality Control
+            </Link>
+            <Link
+              to="/admin"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/admin')
+                  ? 'bg-blue-900 text-white'
+                  : 'text-blue-100 hover:bg-blue-700'
+              }`}
+              onClick={() => onNavigate('/admin')}
+            >
+              Admin
+            </Link>
           </div>
         </div>
       </div>
@@ -51,25 +60,4 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
   );
 }
 
-interface NavLinkProps {
-  icon: React.ReactNode;
-  text: string;
-  isActive: boolean;
-  onClick: () => void;
-}
-
-function NavLink({ icon, text, isActive, onClick }: NavLinkProps) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors
-        ${isActive 
-          ? 'bg-indigo-700 text-white' 
-          : 'text-indigo-100 hover:bg-indigo-500 hover:text-white'
-        }`}
-    >
-      {icon}
-      <span>{text}</span>
-    </button>
-  );
-}
+export default Navigation;
