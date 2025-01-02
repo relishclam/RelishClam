@@ -12,6 +12,7 @@ const copyRedirects = () => ({
 });
 
 export default defineConfig({
+  base: '/',
   plugins: [react(), copyRedirects()],
   resolve: {
     alias: {
@@ -21,9 +22,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    assetsDir: 'assets',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+      },
+      output: {
+        manualChunks: undefined,
       },
     },
   },
