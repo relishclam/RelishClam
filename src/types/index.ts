@@ -1,12 +1,12 @@
 export interface Supplier {
-  id?: number;
+  id: number;
   name: string;
   contact: string;
   licenseNumber: string;
 }
 
 export interface PurchaseOrder {
-  id?: number;
+  id: number;
   poNumber: string;
   supplierId: number;
   date: Date;
@@ -18,14 +18,14 @@ export interface PurchaseOrder {
 }
 
 export interface RawMaterial {
-  id?: number;
+  id: number;
   supplierId: number;
   purchaseOrderId: number;
   weight: number;
   photoUrl: string;
   date: Date;
-  lotNumber: string | null;
   status: 'pending' | 'assigned';
+  lotNumber: string | null;
 }
 
 export interface DepurationData {
@@ -45,7 +45,7 @@ export interface DepurationData {
 }
 
 export interface Lot {
-  id?: number;
+  id: number;
   lotNumber: string;
   receiptIds: number[];
   totalWeight: number;
@@ -56,23 +56,23 @@ export interface Lot {
 }
 
 export interface ProcessingBatch {
-  id?: number;
+  id: number;
   lotNumber: string;
   shellOnWeight: number;
   meatWeight: number;
-  boxes: Array<{
+  boxes: {
     type: 'shell-on' | 'meat';
     weight: number;
     boxNumber: string;
     grade: string;
-  }>;
-  date: Date;
-  yieldPercentage: number;
+  }[];
   status: 'pending' | 'completed';
+  yieldPercentage: number;
+  date: Date;
 }
 
 export interface Package {
-  id?: number;
+  id: number;
   lotNumber: string;
   type: 'shell-on' | 'meat';
   weight: number;
@@ -83,7 +83,7 @@ export interface Package {
 }
 
 export interface ProductGrade {
-  id?: number;
+  id: number;
   code: string;
   name: string;
   description: string;
@@ -105,4 +105,11 @@ export interface PackagedProduct {
   packingDate: string;
 }
 
-export type ViewType = 'landing' | 'production' | 'quality' | 'inventory' | 'admin';
+export interface Product {
+  id: number;
+  lotId: number;
+  type: 'shell-on' | 'meat';
+  grade: string;
+}
+
+export type ViewType = 'dashboard' | 'rawMaterial' | 'processing' | 'packaging' | 'inventory' | 'admin';

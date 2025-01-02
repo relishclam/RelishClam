@@ -1,5 +1,7 @@
 import { db } from './index';
 
+export { db };
+
 async function setupDatabase() {
   try {
     // Only add sample data if the database is empty
