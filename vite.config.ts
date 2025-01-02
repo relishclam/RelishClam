@@ -6,14 +6,28 @@ import fs from 'fs-extra';
 // Custom plugin to copy _redirects
 const copyRedirects = () => ({
   name: 'copy-redirects',
-  closeBundle: async () => {
+  writeBundle: async () => {
     await fs.copy('public/_redirects', 'dist/_redirects');
   }
 });
 
+// Custom plugin to handle SPA routing
+const spa = () => ({
+  name: 'spa',
+  configureServer(server) {
+    return () => {
+      server.middlewares.use((req, res, next) => {
+        if (req.url?.includes('.')) return next();
+        req.url = '/';
+        next();
+      });
+    };
+  }
+});
+
 export default defineConfig({
-  base: '/',
-  plugins: [react(), copyRedirects()],
+  base: '',
+  plugins: [react(), copyRedirects(), spa()],
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -36,5 +50,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
+    strictPort: true,
+    historyApiFallback: true,
   },
 });
