@@ -1,12 +1,12 @@
 export interface Supplier {
-  id: number;
+  id?: number;
   name: string;
   contact: string;
   licenseNumber: string;
 }
 
 export interface PurchaseOrder {
-  id: number;
+  id?: number;
   poNumber: string;
   supplierId: number;
   date: Date;
@@ -18,14 +18,14 @@ export interface PurchaseOrder {
 }
 
 export interface RawMaterial {
-  id: number;
+  id?: number;
   supplierId: number;
   purchaseOrderId: number;
   weight: number;
   photoUrl: string;
   date: Date;
-  status: 'pending' | 'assigned';
   lotNumber: string | null;
+  status: 'pending' | 'assigned';
 }
 
 export interface DepurationData {
@@ -45,34 +45,40 @@ export interface DepurationData {
 }
 
 export interface Lot {
-  id: number;
+  id?: number;
   lotNumber: string;
-  receiptIds: number[];
-  totalWeight: number;
-  notes?: string;
+  rawMaterialIds: number[];
   status: 'pending' | 'processing' | 'completed';
-  createdAt: Date;
   depurationData?: DepurationData;
+  createdAt: Date;
 }
 
 export interface ProcessingBatch {
-  id: number;
+  id?: number;
   lotNumber: string;
   shellOnWeight: number;
   meatWeight: number;
-  boxes: {
+  boxes: Array<{
     type: 'shell-on' | 'meat';
     weight: number;
     boxNumber: string;
     grade: string;
-  }[];
-  status: 'pending' | 'completed';
-  yieldPercentage: number;
+  }>;
   date: Date;
+  yieldPercentage: number;
+  status: 'pending' | 'completed';
+}
+
+export interface ShellWeight {
+  id?: number;
+  weight: number;
+  date: Date;
+  createdAt: Date;
+  notes?: string;
 }
 
 export interface Package {
-  id: number;
+  id?: number;
   lotNumber: string;
   type: 'shell-on' | 'meat';
   weight: number;
@@ -83,7 +89,7 @@ export interface Package {
 }
 
 export interface ProductGrade {
-  id: number;
+  id?: number;
   code: string;
   name: string;
   description: string;

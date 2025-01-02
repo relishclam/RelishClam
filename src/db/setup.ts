@@ -53,12 +53,9 @@ async function setupDatabase() {
 }
 
 // Initialize database
-db.isOpen() || db.open().then(setupDatabase).catch(err => {
-  console.error('Failed to initialize database:', err);
-  // If there's a version error, reset and try again
-  if (err.name === 'VersionError') {
-    db.resetDatabase()
-      .then(setupDatabase)
-      .catch(console.error);
-  }
-});
+db.open()
+  .then(setupDatabase)
+  .catch(err => {
+    console.error('Failed to initialize database:', err);
+    // Handle any initialization errors
+  });

@@ -8,7 +8,7 @@ import type {
   Package,
   ProductGrade,
   PurchaseOrder 
-} from './schema';
+} from '../types';
 
 class ClamFlowDB extends Dexie {
   suppliers!: Dexie.Table<Supplier, number>;
@@ -68,65 +68,19 @@ class ClamFlowDB extends Dexie {
     }));
   }
 
-  async initializeDatabase() {
-    const supplierCount = await this.suppliers.count();
-    const gradeCount = await this.productGrades.count();
-
-    if (supplierCount === 0) {
-      await this.suppliers.bulkAdd([
-        { name: "Ocean Fresh Clams", contact: "555-0101", licenseNumber: "LIC001" },
-        { name: "Bay Area Seafood", contact: "555-0102", licenseNumber: "LIC002" },
-        { name: "Coastal Harvest", contact: "555-0103", licenseNumber: "LIC003" }
-      ]);
-    }
-
-    if (gradeCount === 0) {
-      await this.productGrades.bulkAdd([
-        {
-          code: 'A',
-          name: 'Premium',
-          description: 'Highest quality, uniform size, perfect condition',
-          productType: 'shell-on'
-        },
-        {
-          code: 'B',
-          name: 'Standard',
-          description: 'Good quality, minor variations allowed',
-          productType: 'shell-on'
-        },
-        {
-          code: 'A',
-          name: 'Premium',
-          description: 'Clean, white meat, no impurities',
-          productType: 'meat'
-        },
-        {
-          code: 'B',
-          name: 'Standard',
-          description: 'Good quality meat, slight color variations allowed',
-          productType: 'meat'
-        }
-      ]);
-    }
+  async clearAllTables() {
+    await Promise.all([
+      this.suppliers.clear(),
+      this.rawMaterials.clear(),
+      this.lots.clear(),
+      this.processingBatches.clear(),
+      this.shellWeights.clear(),
+      this.packages.clear(),
+      this.productGrades.clear(),
+      this.purchaseOrders.clear()
+    ]);
   }
 }
 
-// Create database instance
+// Create and export database instance
 export const db = new ClamFlowDB();
-
-// Initialize database
-db.open()
-  .then(() => db.initializeDatabase())
-  .catch(error => {
-    console.error('Failed to open database:', error);
-    // If version error, delete and recreate
-    if (error.name === 'VersionError') {
-      db.delete().then(() => {
-        console.log('Database deleted due to version mismatch');
-        window.location.reload();
-      });
-    }
-  });
-
-export * from './setup';
-export * from '../types';
